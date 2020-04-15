@@ -1,7 +1,8 @@
 import codecs
 from flask import Flask, request
-import requests
-import json
+from roadtrip.weather import get_current_weather_api
+from roadtrip.database import get_current_weather_database, add_current_weather
+
 
 app = Flask(__name__)
 
@@ -15,12 +16,13 @@ def homepage():
 @app.route("/cityweather", methods=["POST"])
 def cityweather():
     city = request.form["city"]
-    parameters = {"q": city, "appid": "5a379190bfc2627d0c791dc5ab8565f7"}
-    weather = requests.get("http://api.openweathermap.org/data/2.5/weather", params=parameters)
-    description = weather.json()["weather"][0]["description"]
-    temp = weather.json()["main"]["temp"] - 273.15
-    humidity = weather.json()["main"]["humidity"]
-    result = "<h1>"+city+"'s weather</h1>" + "<h3>Description:</h3>" + description + "<h3>Temperature(Celsius):</h3>" + str(temp) + "<h3>Humidity:</h3>" + str(humidity)
+    temp = 0
+    if get_current_weather_database(city) is not None:
+        temp = get_current_weather_database(city)
+    else:
+        temp = get_current_weather_api(city)
+        add_current_weather(city, temp)
+    result = "<h1>"+city+"'s weather</h1>" "<h3>Temperature(Celsius):</h3>" + str(temp)
     return result
 
 
