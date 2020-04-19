@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def homepage():
-    file = codecs.open("homepage.html", "r", "utf-8")
+    file = codecs.open("homepage_prototype.html", "r", "utf-8")
     return file.read()
 
 

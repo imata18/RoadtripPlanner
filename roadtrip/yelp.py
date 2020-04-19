@@ -94,4 +94,4 @@ def query_api(term, location):
     pprint.pprint(response, indent=2)
 
 
-print(search("hotel", "chicago, IL"))
+print(search("hotel", "chicago"))

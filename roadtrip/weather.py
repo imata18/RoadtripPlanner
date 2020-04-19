@@ -8,3 +8,5 @@ def get_current_weather_api(city):
     humidity = weather.json()["main"]["humidity"]
     return temp
 
+
+
