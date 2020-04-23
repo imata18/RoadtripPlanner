@@ -28,15 +28,16 @@ def get_directions_api(fromAddress, fromCity, fromState, toAddress, toCity, toSt
     sumDistance = 0
     mapping = directions.json()["route"]
     mappingDistance = directions.json()["route"]["legs"][0]["maneuvers"]
-    mappingDistance = directions.json()["route"]["legs"][0]["maneuvers"][0]["startPoint"]['lat']
-    for i in range (len(mappingDistance)):
+    #mappingDistance = directions.json()["route"]["legs"][0]["maneuvers"][0]["startPoint"]['lat']
+    for i in range(len(mappingDistance)):
         sumDistance+=mappingDistance[i]["distance"]
         if sumDistance > 520:
             sumDistance = 0
-            return mappingDistance[i]["startPoint"]["lat"] + ", " + mappingDistance[i]["startPoint"]["lng"]
+            return  str(mappingDistance[i]["startPoint"]["lat"]) + ", " + str(mappingDistance[i]["startPoint"]["lng"])
         if 460 < sumDistance < 520: 
             sumDistance = 0
-            return mappingDistance[i+1]["startPoint"]["lat"] + ", " + mappingDistance[i+1]["startPoint"]["lng"]
+            if i + 1 < len(mappingDistance):
+                return str(mappingDistance[i+1]["startPoint"]["lat"]) + ", " + str(mappingDistance[i+1]["startPoint"]["lng"])
     #return mappingDistance
 
 print(get_directions_api("1200 Pike Street", "Boston", "MA", "2400 Reed Road", "Houston", "TX"))
