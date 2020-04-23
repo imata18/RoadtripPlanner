@@ -26,6 +26,7 @@ def get_directions_api(fromAddress, fromCity, fromState, toAddress, toCity, toSt
     #humidity = weather.json()["main"]["humidity"]
     
     sumDistance = 0
+    locationStops = []
     mapping = directions.json()["route"]
     mappingDistance = directions.json()["route"]["legs"][0]["maneuvers"]
     #mappingDistance = directions.json()["route"]["legs"][0]["maneuvers"][0]["startPoint"]['lat']
@@ -33,11 +34,11 @@ def get_directions_api(fromAddress, fromCity, fromState, toAddress, toCity, toSt
         sumDistance+=mappingDistance[i]["distance"]
         if sumDistance > 520:
             sumDistance = 0
-            return  str(mappingDistance[i]["startPoint"]["lat"]) + ", " + str(mappingDistance[i]["startPoint"]["lng"])
+            locationStops.append(str(mappingDistance[i]["startPoint"]["lat"]) + ", " + str(mappingDistance[i]["startPoint"]["lng"]))
         if 460 < sumDistance < 520: 
             sumDistance = 0
             if i + 1 < len(mappingDistance):
-                return str(mappingDistance[i+1]["startPoint"]["lat"]) + ", " + str(mappingDistance[i+1]["startPoint"]["lng"])
-    #return mappingDistance
+                locationStops.append(str(mappingDistance[i+1]["startPoint"]["lat"]) + ", " + str(mappingDistance[i+1]["startPoint"]["lng"]))
+    return locationStops
 
-print(get_directions_api("1200 Pike Street", "Boston", "MA", "2400 Reed Road", "Houston", "TX"))
+print(get_directions_api("1200 Pike Street", "Boston", "MA", "565 Gayley", "Los Angeles", "CA"))
