@@ -5,21 +5,22 @@ def get_directions_api(fromAddress, fromCity, fromState, toAddress, toCity, toSt
     
     #fromState = "MA"
     #fromCity = "Boston"
-    fromStreetName = "Pike+Street"
-    fromNumber = "1200"
+    #fromStreetName = "Pike+Street"
+    #fromNumber = "1200"
     #toState = "TX"
     #toCity = "Houston"
-    toStreetName = "Reed+Rd"
-    toNumber = "2400"
+    #toStreetName = "Reed+Rd"
+    #toNumber = "2400"
     
     fromAddressPlus = fromAddress.replace(" ","+")
     toAddressPlus = toAddress.replace(" ","+")
     
-    fromAddressInput = fromAddress
+    fromAddressInput = fromAddress + "+" + fromCity + "+" + fromState
+    toAddressInput = toAddress + "+" + toCity + "+" + toState
     
     mapQuestKey = "YbLPlxGYgw8hjtfRJ289cHgHROVXMCvz"
-    directions = requests.get("http://open.mapquestapi.com/directions/v2/route?key="+mapQuestKey+"&from="+fromNumber+",+"+fromStreetName+",+"+fromCity+",+"+fromState+"&to="+toNumber+"+"+toStreetName+",+"+toCity+",+"+toState) #, params=parameters)
-    directions = requests.get("http://open.mapquestapi.com/directions/v2/route?key="+mapQuestKey+"&from="++"&to="+)
+    #directions = requests.get("http://open.mapquestapi.com/directions/v2/route?key="+mapQuestKey+"&from="+fromNumber+",+"+fromStreetName+",+"+fromCity+",+"+fromState+"&to="+toNumber+"+"+toStreetName+",+"+toCity+",+"+toState) #, params=parameters)
+    directions = requests.get("http://open.mapquestapi.com/directions/v2/route?key="+mapQuestKey+"&from="+fromAddressInput+"&to="+toAddressInput)
     #description = weather.json()["weather"][0]["description"]
     #temp = weather.json()["main"]["temp"] - 273.15
     #humidity = weather.json()["main"]["humidity"]
