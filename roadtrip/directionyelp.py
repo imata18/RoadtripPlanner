@@ -46,6 +46,7 @@ def get_directions_api(fromAddress, fromCity, fromState, toAddress, toCity, toSt
             if i + 1 < len(mappingDistance):
                 locationStops.append([str(mappingDistance[i+1]["startPoint"]["lat"]) + ", " + str(mappingDistance[i+1]["startPoint"]["lng"])])
     return locationStops
+
 r = get_directions_api("1200 Pike Street", "Boston", "MA", "565 Gayley", "Los Angeles", "CA")
 print(r)
 # print(get_directions_api("1200 Pike Street", "Boston", "MA", "565 Gayley", "Los Angeles", "CA"))
@@ -53,10 +54,16 @@ print(r)
 def getlocation(r):
     locationtotal = []
     for i in r:
-        print(i[0])
-        locations = requests.get("http://open.mapquestapi.com/geocoding/v1/reverse?key="+mapQuestKey+"location="+ i[0] +"&includeRoadMetadata=true&includeNearestIntersection=true")
-        parsedlocations = locations.json()["info"]
-        print(parsedlocations)
+        stringInput = i[0].replace(" ","")
+        #print(i[0])
+        #i[0].replace(" ","")
+        #print(stringInput)
+        locations = requests.get("http://open.mapquestapi.com/geocoding/v1/reverse?key="+mapQuestKey+"&location="+stringInput+"&includeRoadMetadata=true&includeNearestIntersection=true")
+        parsedCity = locations.json()["results"][0]["locations"][0]["adminArea5"]
+        parsedState = locations.json()["results"][0]["locations"][0]["adminArea3"]
+        cityAndState = str(parsedCity) + ", " + str(parsedState)
+        locationtotal.append(cityAndState)
+    return locationtotal
 
 
 print(getlocation(r))
