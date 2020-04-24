@@ -46,6 +46,22 @@ def user_info(username):
         file = codecs.open("plan.html", "r", "utf-8")
         return file.read()
 
-def user_plan(start, dest):
-    return start+dest
+def get_hotels(stops):
+    return ["sunny", "sunny", "cloudy"]
 
+def get_weather(stops):
+    return ["four seasons", "holiday inn", "hilton"]
+
+def get_stops(start, dest):
+    return []
+
+def user_plan(user, start, dest):
+    stops = get_stops(start, dest)
+    hotels = get_hotels(stops)
+    weathers = get_weather(stops)
+    mycursor.execute("delete from " + user)
+    for i in range(len(hotels)):
+        mycursor.execute(
+            "insert into " + user + " (hotel, weather) values ('" + hotels[i] + "', '" + weathers[i] + "')")
+    mydb.commit()
+    return user_info(user)

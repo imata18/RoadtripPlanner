@@ -1,9 +1,7 @@
-import codecs
 from flask import Flask, request
 from roadtrip.database import *
 
 app = Flask(__name__)
-
 
 @app.route("/")
 def homepage():
@@ -36,9 +34,10 @@ def after_register():
 
 @app.route("/plan", methods=["POST"])
 def plan():
+    user = request.form["username"]
     start = request.form["from"]
     dest = request.form["destination"]
-    return user_plan(start,dest)
+    return user_plan(user, start,dest)
 
 @app.route("/replan")
 def replan():
