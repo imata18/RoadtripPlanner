@@ -35,9 +35,13 @@ def after_register():
 @app.route("/plan", methods=["POST"])
 def plan():
     user = request.form["username"]
-    start = request.form["from"]
-    dest = request.form["destination"]
-    return user_plan(user, start,dest)
+    fstreet = request.form["fstreet"]
+    fcity = request.form["fcity"]
+    fstate = request.form["fstate"]
+    dstreet = request.form["dstreet"]
+    dcity = request.form["dcity"]
+    dstate = request.form["dstate"]
+    return user_plan(user, fstreet, fcity, fstate, dstreet, dcity, dstate)
 
 @app.route("/replan")
 def replan():

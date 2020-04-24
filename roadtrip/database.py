@@ -1,5 +1,8 @@
 import mysql.connector
 import codecs
+from roadtrip.directionyelp import *
+from roadtrip.yelp import get_hotel_name
+from roadtrip.weather import get_weather_api
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -38,30 +41,42 @@ def user_info(username):
         result = "<h1>Your Roadtrip Plan</h1><br>"
         plan = mycursor.fetchall()
         for i in range(len(plan)):
-            result += "day"+str(i+1)+": weather: " + plan[i][1] + " stay at: " + plan[i][0] + "<br>"
+            result += "On day"+str(i+1)+", you will stop in "+plan[i][2]+ ". The weather is " + plan[i][1] + ". You will stay at " + plan[i][0] + ".<br>"
         result += "<form action='/replan'><button type='submit'>plan a new trip</button></form>"
         return result
     except:
-        mycursor.execute("CREATE TABLE IF NOT EXISTS " + username + " (hotel VARCHAR(255), weather VARCHAR(255))")
+        mycursor.execute("CREATE TABLE IF NOT EXISTS " + username + " (hotel VARCHAR(255), weather VARCHAR(255), location VARCHAR(255))")
         file = codecs.open("plan.html", "r", "utf-8")
         return file.read()
 
 def get_hotels(stops):
-    return ["sunny", "sunny", "cloudy"]
+    result = []
+    for location in stops:
+        result.append(get_hotel_name(location))
+    return result
 
 def get_weather(stops):
-    return ["four seasons", "holiday inn", "hilton"]
+    result = []
+    for location in stops:
+        city = location.split(",")[0]
+        result.append(get_weather_api(city))
+    return result
 
-def get_stops(start, dest):
-    return []
+def get_stops(fstreet, fcity, fstate, dstreet, dcity, dstate):
+    r = get_directions_api(fstreet, fcity, fstate, dstreet, dcity, dstate)
+    return getlocation(r)
 
-def user_plan(user, start, dest):
-    stops = get_stops(start, dest)
+def user_plan(user, fstreet, fcity, fstate, dstreet, dcity, dstate):
+    stops = get_stops(fstreet, fcity, fstate, dstreet, dcity, dstate)
     hotels = get_hotels(stops)
     weathers = get_weather(stops)
     mycursor.execute("delete from " + user)
     for i in range(len(hotels)):
         mycursor.execute(
-            "insert into " + user + " (hotel, weather) values ('" + hotels[i] + "', '" + weathers[i] + "')")
+            "insert into " + user + " (hotel, weather, location) values ('" +
+            hotels[i] + "', '" + weathers[i] + "', '" + stops[i] + "')"
+        )
     mydb.commit()
     return user_info(user)
+
+
